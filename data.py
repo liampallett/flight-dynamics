@@ -1,6 +1,7 @@
 import math
 
 UNIVERSAL_GAS_CONSTANT = 8314.46
+BAROMETRIC_ALTITUDE_CONSTANT = 44330
 
 class Propellant:
     def __init__(self, specific_heat_ratio, molecular_weight, typical_chamber_temperature):
@@ -9,12 +10,17 @@ class Propellant:
         self.typicalChamberTemperature = typical_chamber_temperature
 
     def calculate_gas_constant(self):
-        return UNIVERSAL_GAS_CONSTANT / self.molecularWeight
+        return UNIVERSAL_GAS_CONSTANT/self.molecularWeight
 
     def calculate_speed_of_sound(self, temperature):
-        return math.sqrt(self.specificHeatRatio * self.calculate_gas_constant() * temperature)
+        return math.sqrt(self.specificHeatRatio*self.calculate_gas_constant()*temperature)
 
 def calculate_ambient_pressure(altitude):
-    if altitude > 44330:
+    if altitude > BAROMETRIC_ALTITUDE_CONSTANT:
         return 0
-    return 101325 * (1 - 2.25577E-5* altitude)**5.25588 # https://www.engineeringtoolbox.com/air-altitude-pressure-d_462.html
+    return 101325*(1-2.25577E-5*altitude)**5.25588 # https://www.engineeringtoolbox.com/air-altitude-pressure-d_462.html
+
+def calculate_air_density(altitude):
+    if altitude > BAROMETRIC_ALTITUDE_CONSTANT:
+        return 0.0
+    return 1.225 * (1-2.25577E-5*altitude)**4.25588
