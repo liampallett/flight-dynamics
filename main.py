@@ -33,23 +33,28 @@ dynamic_pressures = []
 
 print(f"Total burn time: {burn_time:.2f} seconds")
 
-while wet_mass > 0:
+while True:
     ambient_pressure = calculate_ambient_pressure(altitude)
     air_density = calculate_air_density(altitude)
     dynamic_pressure = 0.5*air_density*(velocity**2)
 
-    pressure_thrust = (engine.AmbientPressure-ambient_pressure)*(dims['exit_area']/10000)
-    current_thrust = (burn_rate * engine.EscapeVelocity) + pressure_thrust
+    if wet_mass > 0:
+        pressure_thrust = (engine.AmbientPressure-ambient_pressure)*(dims['exit_area']/10000)
+        current_thrust = (burn_rate * engine.EscapeVelocity) + pressure_thrust
+
+        wet_mass -= burn_rate * time_step
+        total_mass -= burn_rate * time_step
+    else:
+        current_thrust = 0
+        wet_mass = 0
 
     drag_force = dynamic_pressure*DRAG_COEFFICIENT*rocket_area
-
     net_force = current_thrust-drag_force-(total_mass*EARTH_GRAVITY)
+
     acceleration = net_force/total_mass
     velocity += acceleration*time_step
     altitude += velocity*time_step
 
-    wet_mass -= burn_rate*time_step
-    total_mass -= burn_rate*time_step
     current_time += time_step
 
     times.append(current_time)
@@ -57,12 +62,23 @@ while wet_mass > 0:
     thrusts.append(current_thrust)
     dynamic_pressures.append(dynamic_pressure)
 
+    if velocity < 0:
+        break
+
+# --- NEW: Print the Final Flight Stats ---
+print(f"--- Flight Results ---")
+print(f"Max Altitude (Apoapsis): {max(altitudes) / 1000:.2f} km")
+print(f"Time to Apoapsis: {current_time / 60:.2f} minutes")
+print(f"Max G-Force: {max([t/total_mass for t in thrusts]) / EARTH_GRAVITY:.1f} Gs")
+
 plt.figure(figsize=(15, 5))
 plt.subplot(1, 3, 1)
 plt.plot(times, altitudes)
 plt.title("Altitude vs. Time")
 plt.ylabel("Meters")
 plt.xlabel("Seconds")
+plt.axvline(x=burn_time, color='gray', linestyle='--', label='MECO')
+plt.legend();
 
 plt.subplot(1, 3, 2)
 plt.plot(times, thrusts)
