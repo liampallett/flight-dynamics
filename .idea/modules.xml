@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/isentropic-flow.iml" filepath="$PROJECT_DIR$/.idea/isentropic-flow.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/flight-dynamics.iml" filepath="$PROJECT_DIR$/.idea/flight-dynamics.iml" />
     </modules>
   </component>
 </project>

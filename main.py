@@ -1,5 +1,6 @@
 from data import *
 from engine import *
+import matplotlib.pyplot as plt
 
 EARTH_GRAVITY = 9.80665
 THRUST_CONSTANT = 1.5
@@ -7,8 +8,10 @@ THRUST_CONSTANT = 1.5
 lox_rp1 = Propellant(1.24, 21.9, 3571)
 engine = Engine(lox_rp1, 7000000, 0)
 
-rocket_mass = 50000
-thrust_needed = rocket_mass * THRUST_CONSTANT * EARTH_GRAVITY
+dry_mass = 40000
+wet_mass = 10000
+total_mass = dry_mass + wet_mass
+thrust_needed = total_mass * THRUST_CONSTANT * EARTH_GRAVITY
 
 dims = engine.get_dimensions(thrust_needed)
 print(f"--- Engine Design (SL) ---")
