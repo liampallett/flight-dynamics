@@ -9,7 +9,8 @@ Flight dynamics simulator written in Python. Use for simple single-stage rockets
 - Implements NASA's [Isentropic Flow](https://www.grc.nasa.gov/www/k-12/airplane/isentrop.html) equations.
 - A propellant class and an engine class calculate the thrust and geometry of the required engine.
 - Includes graph visualisation for altitude, thrust and dynamic pressure to visualise your rocket's flightpath.
-  ![Rocket Flight Analysis](images/latest.png)
+  
+![Rocket Flight Analysis](images/latest.png)
 ---
 
 # Physics
@@ -20,6 +21,14 @@ $$\frac{A}{A^*}=\frac{1}{M}\left[\frac{2}{\gamma+1}(1+\frac{\gamma-1}{2}M^2)\rig
 
 Where $\gamma$ is the ratio of specific heats of the liquid propellant. The ratio shows that there are two solutions, 
 one subsonic and one supersonic.
+
+---
+
+# Historical Simulations
+
+| Rocket | Fuel                        | Graph                                       |
+|--------|-----------------------------|---------------------------------------------|
+| V2     | B-Stoff (3:1 Ethanol:Water) | ![V2 + B-Stoff Fuel](images/V2_B-Stoff.png) |
 
 ---
 
