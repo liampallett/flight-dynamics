@@ -5,15 +5,19 @@ import datetime
 
 EARTH_GRAVITY = 9.80665
 THRUST_CONSTANT = 1.5
-DRAG_COEFFICIENT = 0.5
+DRAG_COEFFICIENT = 0.2
 
-lox_rp1 = Propellant(1.24, 21.9, 3571)
-engine = Engine(lox_rp1, 7000000, 0)
+# V2 Specifications
+lox_b_stoff = Propellant(1.2, 33.16, 2700)
+engine = Engine(lox_b_stoff, 1500000, 0)
+fuel_mass = 3810 + 4910 # Ethanol + Water
+oxidiser_mass = 5000
 
-dry_mass = 10000
-wet_mass = 40000
+dry_mass = 4000
+wet_mass = fuel_mass + oxidiser_mass
 total_mass = dry_mass + wet_mass
-rocket_diameter = 3
+
+rocket_diameter = 1.65
 rocket_area = math.pi*(rocket_diameter/2)**2
 thrust_needed = total_mass * THRUST_CONSTANT * EARTH_GRAVITY
 
@@ -66,7 +70,6 @@ while True:
     if velocity < 0:
         break
 
-# --- NEW: Print the Final Flight Stats ---
 print(f"--- Flight Results ---")
 print(f"Max Altitude (Apoapsis): {max(altitudes) / 1000:.2f} km")
 print(f"Time to Apoapsis: {current_time / 60:.2f} minutes")
@@ -79,7 +82,7 @@ plt.title("Altitude vs. Time")
 plt.ylabel("Meters")
 plt.xlabel("Seconds")
 plt.axvline(x=burn_time, color='gray', linestyle='--', label='MECO')
-plt.legend();
+plt.legend()
 
 plt.subplot(1, 3, 2)
 plt.plot(times, thrusts)
@@ -98,5 +101,6 @@ plt.tight_layout()
 timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 plt.savefig(f'images/flight_{timestamp}.png')
 plt.savefig('images/latest.png')
+plt.savefig("images/V2_B-Stoff.png")
 
 plt.show()

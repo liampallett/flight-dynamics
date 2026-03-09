@@ -1,19 +1,24 @@
 import math
 
 UNIVERSAL_GAS_CONSTANT = 8314.46
-BAROMETRIC_ALTITUDE_CONSTANT = 44330
+BAROMETRIC_ALTITUDE_CONSTANT = 44330 # Simplified International Standard Atmosphere Model
 
 class Propellant:
-    def __init__(self, specific_heat_ratio, molecular_weight, typical_chamber_temperature):
-        self.specificHeatRatio = specific_heat_ratio
-        self.molecularWeight = molecular_weight
-        self.typicalChamberTemperature = typical_chamber_temperature
+    """
+    Stores thermochemical properties of a liquid fuel rocket propellant.
+
+
+    """
+    def __init__(self, gamma, molecular_weight, typical_chamber_temperature):
+        self.gamma = gamma
+        self.molecular_weight = molecular_weight
+        self.typical_chamber_temperature = typical_chamber_temperature
 
     def calculate_gas_constant(self):
-        return UNIVERSAL_GAS_CONSTANT/self.molecularWeight
+        return UNIVERSAL_GAS_CONSTANT/self.molecular_weight
 
     def calculate_speed_of_sound(self, temperature):
-        return math.sqrt(self.specificHeatRatio*self.calculate_gas_constant()*temperature)
+        return math.sqrt(self.gamma*self.calculate_gas_constant()*temperature)
 
 def calculate_ambient_pressure(altitude):
     if altitude > BAROMETRIC_ALTITUDE_CONSTANT:
