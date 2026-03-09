@@ -1,4 +1,3 @@
-from data import *
 from engine import *
 import matplotlib.pyplot as plt
 import datetime
@@ -6,6 +5,7 @@ import datetime
 EARTH_GRAVITY = 9.80665
 THRUST_CONSTANT = 1.5
 DRAG_COEFFICIENT = 0.2
+EFFICIENCY_FACTOR = 0.97
 
 # V2 Specifications
 lox_b_stoff = Propellant(1.2, 33.16, 2700)
@@ -44,8 +44,8 @@ while True:
     dynamic_pressure = 0.5*air_density*(velocity**2)
 
     if wet_mass > 0:
-        pressure_thrust = (engine.AmbientPressure-ambient_pressure)*(dims['exit_area']/10000)
-        current_thrust = (burn_rate * engine.EscapeVelocity) + pressure_thrust
+        pressure_thrust = (engine.ambient_pressure-ambient_pressure)*(dims['exit_area']/10000)
+        current_thrust = (burn_rate * (engine.escape_velocity * EFFICIENCY_FACTOR)) + pressure_thrust
 
         wet_mass -= burn_rate * time_step
         total_mass -= burn_rate * time_step
