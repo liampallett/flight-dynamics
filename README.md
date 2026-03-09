@@ -8,7 +8,8 @@ Flight dynamics simulator written in Python. Use for simple single-stage rockets
 
 - Implements NASA's [Isentropic Flow](https://www.grc.nasa.gov/www/k-12/airplane/isentrop.html) equations.
 - A propellant class and an engine class calculate the thrust and geometry of the required engine.
-- Includes graph visualisation for altitude, thrust and dynamic pressure to visualise your rocket's flightpath.
+- Includes graph visualisation for altitude, velocity, thrust and dynamic pressure to visualise your rocket's flightpath.
+- Multiple stage simulation for more complex rocketry simulations.
   
 ![Rocket Flight Analysis](images/latest.png)
 ---
@@ -74,7 +75,6 @@ python main.py
 
 - Implement a propellant dataset so hard-coded values are not necessary. Many simulations can be run with varying
 propellants to see the most effective for your rocket setup.
-- Multiple stage simulation for more complex rocketry simulations.
 
 ---
 

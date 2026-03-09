@@ -7,7 +7,7 @@ class Engine:
     def __init__(self, propellant, chamber_pressure, design_altitude):
         self.propellant = propellant
         self.chamber_pressure = chamber_pressure
-        self.ambient_pressure = calculate_ambient_pressure(design_altitude)
+        self.ambient_pressure = get_atmospheric_properties(design_altitude)[0]
         self.gamma = propellant.gamma
         self.r= propellant.calculate_gas_constant()
 
