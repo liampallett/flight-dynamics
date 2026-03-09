@@ -74,6 +74,7 @@ python main.py
 
 - Implement a propellant dataset so hard-coded values are not necessary. Many simulations can be run with varying
 propellants to see the most effective for your rocket setup.
+- Multiple stage simulation for more complex rocketry simulations.
 
 ---
 
