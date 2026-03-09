@@ -15,7 +15,9 @@ Flight dynamics simulator written in Python. Use for simple single-stage rockets
 # Physics
 
 The system estimates for the Mach number using the Newton-Raphson method. The Area-Mach relation equation is as follows:
+
 $$\frac{A}{A^*}=\frac{1}{M}\left[\frac{2}{\gamma+1}(1+\frac{\gamma-1}{2}M^2)\right]^{\frac{\gamma+1}{2(\gamma-1)}}$$
+
 Where $\gamma$ is the ratio of specific heats of the liquid propellant. The ratio shows that there are two solutions, 
 one subsonic and one supersonic.
 
