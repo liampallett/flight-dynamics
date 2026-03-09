@@ -3,30 +3,30 @@ import matplotlib.pyplot as plt
 import datetime
 
 EARTH_GRAVITY = 9.80665
-THRUST_CONSTANT = 1.5
+THRUST_CONSTANT = 2
 DRAG_COEFFICIENT = 0.2
 EFFICIENCY_FACTOR = 0.97
 
 # V2 Specifications
 lox_b_stoff = Propellant(1.2, 33.16, 2700)
 engine = Engine(lox_b_stoff, 1500000, 0)
-fuel_mass = 3810 + 4910 # Ethanol + Water
-oxidiser_mass = 5000
 
-dry_mass = 4000
-wet_mass = fuel_mass + oxidiser_mass
-total_mass = dry_mass + wet_mass
+fuel_mass = 3810 # Ethanol + Water
+oxidiser_mass = 4910 # Liquid oxygen
+dry_mass = 3000
+propellant_mass = fuel_mass + oxidiser_mass
+wet_mass = dry_mass + propellant_mass
 
 rocket_diameter = 1.65
 rocket_area = math.pi*(rocket_diameter/2)**2
-thrust_needed = total_mass * THRUST_CONSTANT * EARTH_GRAVITY
+thrust_needed = wet_mass * THRUST_CONSTANT * EARTH_GRAVITY
 
 dims = engine.get_dimensions(thrust_needed)
 
 burn_rate = dims['mass_flow_rate']
-burn_time = wet_mass / burn_rate
+burn_time = propellant_mass / burn_rate
 
-time_step = 1.0
+time_step = 0.1
 current_time = 0
 altitude = 0
 velocity = 0
@@ -38,25 +38,30 @@ dynamic_pressures = []
 
 print(f"Total burn time: {burn_time:.2f} seconds")
 
+effective_exhaust_velocity = engine.escape_velocity*EFFICIENCY_FACTOR
+theoretical_delta_v = effective_exhaust_velocity*math.log(wet_mass/dry_mass)
+
+print(f"Theoretical Delta-V: {theoretical_delta_v:.2f} ms^-1")
+
 while True:
     ambient_pressure = calculate_ambient_pressure(altitude)
     air_density = calculate_air_density(altitude)
     dynamic_pressure = 0.5*air_density*(velocity**2)
 
-    if wet_mass > 0:
+    if propellant_mass > 0:
         pressure_thrust = (engine.ambient_pressure-ambient_pressure)*(dims['exit_area']/10000)
         current_thrust = (burn_rate * (engine.escape_velocity * EFFICIENCY_FACTOR)) + pressure_thrust
 
+        propellant_mass -= burn_rate * time_step
         wet_mass -= burn_rate * time_step
-        total_mass -= burn_rate * time_step
     else:
         current_thrust = 0
-        wet_mass = 0
+        propellant_mass = 0
 
     drag_force = dynamic_pressure*DRAG_COEFFICIENT*rocket_area
-    net_force = current_thrust-drag_force-(total_mass*EARTH_GRAVITY)
+    net_force = current_thrust-drag_force-(wet_mass*EARTH_GRAVITY)
 
-    acceleration = net_force/total_mass
+    acceleration = net_force/wet_mass
     velocity += acceleration*time_step
     altitude += velocity*time_step
 
@@ -70,10 +75,10 @@ while True:
     if velocity < 0:
         break
 
-print(f"--- Flight Results ---")
+print(f" --- Flight Results --- ")
 print(f"Max Altitude (Apoapsis): {max(altitudes) / 1000:.2f} km")
 print(f"Time to Apoapsis: {current_time / 60:.2f} minutes")
-print(f"Max G-Force: {max([t/total_mass for t in thrusts]) / EARTH_GRAVITY:.1f} Gs")
+print(f"Max G-Force: {max([t/wet_mass for t in thrusts]) / EARTH_GRAVITY:.1f} Gs")
 
 plt.figure(figsize=(15, 5))
 plt.subplot(1, 3, 1)
