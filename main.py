@@ -1,6 +1,7 @@
 from data import *
 from engine import *
 import matplotlib.pyplot as plt
+import datetime
 
 EARTH_GRAVITY = 9.80665
 THRUST_CONSTANT = 1.5
@@ -93,4 +94,9 @@ plt.ylabel("Pascals")
 plt.xlabel("Seconds")
 
 plt.tight_layout()
+
+timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+plt.savefig(f'images/flight_{timestamp}.png')
+plt.savefig('images/latest.png')
+
 plt.show()
