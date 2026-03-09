@@ -65,7 +65,7 @@ one subsonic and one supersonic.
 # How to Run the Project
 
 ```bash
-git clone https://github.com/yourusername/flight-dynamics.git
+git clone https://github.com/liampallett/flight-dynamics.git
 pip install -r requirements.txt
 python main.py
 ```
