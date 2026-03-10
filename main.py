@@ -14,7 +14,7 @@ EARTH_OMEGA = 7.2921159e-5
 
 DRAG_COEFFICIENT = 0.2
 
-def run_simulation(rocket_parameter, mission_parameter_dict, payload_mass, time_step, telemetry):
+def run_simulation(rocket_parameter, mission_parameter_dict, payload_mass, time_step, telemetry, fig, ax, trajectory_line, rocket_dot):
     current_time = 0
     x_pos, y_pos = 0, 0
 
@@ -185,6 +185,9 @@ def run_simulation(rocket_parameter, mission_parameter_dict, payload_mass, time_
         if altitude < 0 and current_time > 1.0:
             break
 
+        if len(telemetry['times']) % 500 == 0:
+            update_live_view(fig, trajectory_line, rocket_dot, telemetry, mission_parameters['mission_state'])
+
     final_x = telemetry['x_positions'][-1000:]
     final_y = telemetry['y_positions'][-1000:]
 
@@ -279,6 +282,42 @@ def plot_dashboard(telemetry, mission_parameters, rocket_name):
 
     plt.show()
 
+def run_live_view(telemetry, mission_parameters):
+    plt.style.use('dark_background')
+    plt.ion()
+    fig, ax = plt.subplots()
+
+    ax.add_patch(plt.Circle((0, 0), RADIUS_EARTH + 100000, color='skyblue', alpha=0.3, label='Atmosphere'))
+    ax.add_patch(plt.Circle((0, 0), RADIUS_EARTH, color='darkblue', label='Earth'))
+    ax.add_patch(plt.Circle((0, 0), RADIUS_EARTH + mission_parameters['target_apoapsis'], color='lightgreen', fill=False, linestyle='--', alpha=0.5, label='Target Orbit'))
+
+    trajectory_line, = ax.plot([], [], color='red')
+    rocket_dot, = ax.plot([], [], 'wo', markersize=5, label='Rocket')
+
+    ax.legend(loc='upper left')
+    ax.set_title('Live Trajectory')
+
+    return fig, ax, trajectory_line, rocket_dot
+
+def update_live_view(fig, trajectory_line, rocket_dot, telemetry, mission_state):
+    x = telemetry['x_positions']
+    y = [p + RADIUS_EARTH for p in telemetry['y_positions']]
+
+    trajectory_line.set_data(x, y)
+    rocket_dot.set_data([x[-1]], [y[-1]])
+
+    if len(x) > 1:
+        cx, cy = x[-1], y[-1]
+
+        altitude = math.sqrt(cx**2+cy**2)-RADIUS_EARTH
+        zoom = max(500000, altitude*10)
+
+        trajectory_line.axes.set_xlim(cx - zoom, cx + zoom)
+        trajectory_line.axes.set_ylim(cy - zoom, cy + zoom)
+
+    fig.canvas.draw()
+    fig.canvas.flush_events()
+
 if __name__ == "__main__":
     PAYLOAD_MASS = 15000
     ROCKET_NAME = "Falcon9"
@@ -313,10 +352,12 @@ if __name__ == "__main__":
         'pitch_program_angle': 80
     }
 
-    print(f"Merlin sea level Isp: {merlin_1d_sea.specific_impulse:.1f}s")
-    print(f"Merlin sea level Ve: {merlin_1d_sea.escape_velocity:.1f} m/s")
-    print(f"Stage 1 burn time: {stage1.burn_time:.1f}s")
-    print(f"Stage 1 delta-v: {stage1.theoretical_delta_v:.0f} m/s")
+    fig, ax, trajectory_line, rocket_dot = run_live_view(telemetry, mission_parameters)
 
-    run_simulation(rocket, mission_parameters, PAYLOAD_MASS, 0.05, telemetry)
+    run_simulation(rocket, mission_parameters, PAYLOAD_MASS, 0.05, telemetry, fig, ax, trajectory_line, rocket_dot)
+
+    plt.pause(3)
+    plt.close(fig)
+
+    plt.ioff()
     plot_dashboard(telemetry, mission_parameters, ROCKET_NAME)
