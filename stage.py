@@ -1,12 +1,11 @@
 import math
 
 EARTH_GRAVITY = 9.80665
-THRUST_CONSTANT = 2
 DRAG_COEFFICIENT = 0.2
 EFFICIENCY_FACTOR = 0.97
 
 class Stage:
-    def __init__(self, engine, propellant_mass, dry_mass, diameter, carried_mass):
+    def __init__(self, engine, propellant_mass, dry_mass, thrust_weight_ratio, diameter, carried_mass):
         self.engine = engine
         self.propellant_mass = propellant_mass
         self.dry_mass = dry_mass
@@ -15,7 +14,7 @@ class Stage:
         self.diameter = diameter
         self.area = math.pi*(diameter/2)**2
 
-        self.thrust_needed = (self.wet_mass+self.carried_mass)*THRUST_CONSTANT*EARTH_GRAVITY
+        self.thrust_needed = (self.wet_mass+self.carried_mass)*thrust_weight_ratio*EARTH_GRAVITY
         self.dims = engine.get_dimensions(self.thrust_needed)
 
         self.burn_rate = self.dims['mass_flow_rate']

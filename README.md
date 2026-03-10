@@ -30,6 +30,7 @@ one subsonic and one supersonic.
 | Rocket | Fuel                        | Graph                                       |
 |--------|-----------------------------|---------------------------------------------|
 | V2     | B-Stoff (3:1 Ethanol:Water) | ![V2 + B-Stoff Fuel](images/V2_B-Stoff.png) |
+| Falcon 9 | Kerosene | ![Falcon 9 + Kerosene](images/Falcon9.png)  |
 
 ---
 
