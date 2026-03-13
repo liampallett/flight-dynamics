@@ -1,6 +1,6 @@
 # flight-dynamics
 
-Flight dynamics simulator written in Python. Use for simple single-stage rockets (such as a hobby rocket).
+Flight dynamics simulator written in Python. Simulate complex multi-stage rockets with different propellant and engine configuration.
 
 ---
 
