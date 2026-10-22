@@ -1,6 +1,6 @@
 # flight-dynamics
 
-Flight dynamics simulator written in Python. Simulate rocket flight with high accuracy. 
+Flight dynamics simulator written in Python. Simulate complex multi-stage rockets with different propellant and engine configuration.
 
 ---
 
